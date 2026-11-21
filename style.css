@@ -99,3 +99,30 @@ table.log { border-collapse: collapse; width: 100%; margin: 8px 0 16px; font-siz
 table.log th, table.log td { border: 1px solid #aaa; padding: 5px 8px; text-align: left; vertical-align: top; }
 table.log th { background: #e4e4e4; }
 table.log tr:nth-child(even) td { background: #f7f7f7; }
+
+/* Breach alarm */
+#alarm { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: none; align-items: center; justify-content: center; gap: 14px;
+  background: #b00; color: #fff; font-family: "Courier New", monospace; font-weight: bold; padding: 10px; letter-spacing: 1px; animation: blink 1s steps(2) infinite; }
+#alarm button { background: #fff; color: #b00; border: 0; padding: 3px 10px; font-family: inherit; cursor: pointer; animation: none; }
+
+.sightbtn { width: 100%; background: #600; color: #fff; border: 0; padding: 7px; font-weight: bold; cursor: pointer; font-family: inherit; }
+.sightbtn:hover { background: #900; }
+#gate select { margin: 6px 0 4px; padding: 5px; font-family: inherit; width: 100%; }
+
+.counter { text-align: center; border: 2px solid #600; max-width: 300px; margin: 14px auto; padding: 8px; background: #fafafa; }
+.counter small { display: block; font-size: 10px; letter-spacing: 1px; color: #777; }
+.counter b { display: block; font-size: 48px; color: #b00; font-family: "Courier New", monospace; line-height: 1.1; }
+
+/* CCTV */
+.camgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cam p { font-size: 11px; color: #555; margin: 4px 0 0; }
+.screen { position: relative; background: #000; border: 3px solid #222; overflow: hidden; aspect-ratio: 16/9; }
+.screen video, .screen canvas { width: 100%; height: 100%; display: block; object-fit: cover; filter: contrast(1.15) brightness(.9); }
+.screen.live { max-width: 520px; }
+.scan { position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,.25) 2px 3px); }
+.rec { position: absolute; top: 6px; right: 8px; color: #f22; font: bold 11px "Courier New", monospace; animation: blink 1.2s steps(2) infinite; }
+.camlabel { position: absolute; bottom: 6px; left: 8px; color: #eee; font: bold 11px "Courier New", monospace; text-shadow: 1px 1px 0 #000; }
+#livemsg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff;
+  font: bold 16px "Courier New", monospace; letter-spacing: 2px; text-shadow: 2px 2px 0 #000; }
+@media (max-width: 720px) { .camgrid { grid-template-columns: 1fr; } }

@@ -15,17 +15,17 @@ const DOCS = [
     item: "SCP-PERSON",
     commonName: "\"Person\"",
     objectClass: "Person?",
-    facility: "Site-404",
+    facility: "Site-31",
     clearance: 1,
     rating: 999,
     photo: "",
     photoCaption: "SCP-PERSON's containment cell. SCP-PERSON is not in it. SCP-PERSON was in it when this photo was taken.",
     sections: [
-      { heading: "Special Containment Procedures:", body: `SCP-PERSON is to be kept in a standard humanoid containment cell at Site-404. A minimum of three (3) guards must maintain direct visual contact with SCP-PERSON at all times. Guards are to blink in shifts. Guards are not to blink at the same time. Guards are ideally not to blink at all.
+      { heading: "Special Containment Procedures:", body: `SCP-PERSON is to be kept in a standard humanoid containment cell at Site-31. A minimum of three (3) guards must maintain direct visual contact with SCP-PERSON at all times. Guards are to blink in shifts. Guards are not to blink at the same time. Guards are ideally not to blink at all.
 
 The cell door is to remain locked. This has never once mattered.
 
-Site-404 was chosen for SCP-PERSON because it is the hardest facility in the world to find. SCP-PERSON found the exit on day one.
+All Site-31 security cameras are to point at SCP-PERSON's cell. See Security Feeds for why this has not helped.
 
 In the event of a breach (see Breach Log), personnel are to check the break room, the vending machines, other SCPs' cells, and the group chat, in that order.` },
       { heading: "Description:", body: `SCP-PERSON is a humanoid entity known online by the alias "Person." SCP-PERSON appears, behaves and speaks as an ordinary human in every measurable way, which researchers have described as "the most suspicious part."
@@ -37,7 +37,7 @@ No breach has ever been caught on camera. Footage from every breach shows SCP-PE
 • Appears in group photos SCP-PERSON was not present for
 • Is always typing in the group chat at 3:00 AM, but never sends anything
 • Knows about lore that has not been written yet
-• Wi-Fi in SCP-PERSON's cell works better than anywhere else on Site-404. Nobody installed a router.
+• Wi-Fi in SCP-PERSON's cell works better than anywhere else on Site-31. Nobody installed a router.
 • Cannot be found when actively searched for. Appears immediately once the search is called off.` },
       { heading: "Addendum PERSON-1: Reclassification Request", collapsed: true, body: `Dr. ██████ has requested that SCP-PERSON's object class be changed from Keter to "Person," on the grounds that "no existing class describes this."
 
@@ -139,7 +139,7 @@ Result: [[Both are now missing.]]` }
     rating: 520,
     sections: [
       { heading: "", body: `Collected from break room conversations, the group chat, and one sticky note.` },
-      { heading: "Quotes", body: `"Person would randomly breach containment. Genuinely do not know how. Just blinked and poof, gone." — Guard, Site-404
+      { heading: "Quotes", body: `"Person would randomly breach containment. Genuinely do not know how. Just blinked and poof, gone." — Guard, Site-31
 
 "I've stopped writing incident reports. I just write 'Person' and everyone knows." — Security Chief ████
 
@@ -169,7 +169,7 @@ Result: [[Both are now missing.]]` }
 
 // Fake "where is Person right now" locations for the sidebar.
 const LOCATIONS = [
-  "Containment Cell 12, Site-404", "Break room", "Vending machine (inside?)", "Group chat",
+  "Containment Cell 12, Site-31", "Break room", "Vending machine (inside?)", "Group chat",
   "Directly behind you", "Conference Room B", "[DATA EXPUNGED]", "Their own cell (allegedly)",
   "The Site Director's chair", "Unknown", "Roof", "Asleep (unconfirmed)"
 ];
