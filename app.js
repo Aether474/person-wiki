@@ -52,7 +52,8 @@ function shell(contentHtml) {
       <div class="box"><h3>SCP-PERSON Files</h3><ul>${list}</ul></div>
       <div class="box"><h3>Extras</h3><ul>
         <li><a href="cctv.html">Security Feeds</a></li><li><a href="missing.html">Missing Poster</a></li>
-        <li><a href="shop.html">Gift Shop</a></li><li><a href="badge.html">Get Your Badge</a></li></ul></div>
+        <li><a href="shop.html">Gift Shop</a></li><li><a href="badge.html">Get Your Badge</a></li>
+        <li><a href="blink.html">Don't Blink (game)</a></li></ul></div>
       <div class="box"><button id="sight" class="sightbtn">Report a Sighting</button></div>
       <div class="box"><h3>Your Clearance</h3><span id="clr"></span></div>
     </div>
@@ -66,7 +67,6 @@ function shell(contentHtml) {
   document.getElementById("sight").onclick = showSighting;
   maybeAlarm();
   listenForSecret();
-  listenForKonami();
   listenForTerminal();
   tabTitleTrick();
   setTimeout(vanishingWords, 50);
@@ -153,9 +153,11 @@ function renderDoc() {
     ${doc.sections.map(renderSection).join("")}
     ${doc.id === "main" ? '<p class="hidden-msg">if you can read this, Person is behind you.</p>' : ""}
     <p style="clear:both;margin-top:30px">« <a href="doc.html?id=main">SCP-PERSON</a> »</p>
-    ${pageInfo(doc.id)}`);
+    ${pageInfo(doc.id)}
+    ${discussion(doc.id)}`);
 
   window._rating = doc.rating;
+  wireDiscussion();
   if (doc.clearance > getClearance()) showGate(doc);
 }
 
@@ -654,20 +656,112 @@ function nightShift() {
 }
 
 
-// Secret: Konami code (up up down down left right left right b a) flips the site.
-function listenForKonami() {
-  const code = ["arrowup","arrowup","arrowdown","arrowdown","arrowleft","arrowright","arrowleft","arrowright","b","a"];
-  let pos = 0;
-  document.addEventListener("keydown", ev => {
-    const k = ev.key.toLowerCase();
-    pos = (k === code[pos]) ? pos + 1 : (k === code[0] ? 1 : 0);
-    if (pos < code.length) return;
-    pos = 0;
-    const flipped = document.body.classList.toggle("flipped");
-    let note = document.getElementById("flipnote");
-    if (!note) { note = document.createElement("div"); note.id = "flipnote"; document.body.appendChild(note); }
-    note.textContent = flipped ? "SCP-PERSON HAS BREACHED THE WEBSITE" : "website re-contained. for now.";
-    note.className = "show";
-    setTimeout(() => note.className = "", 3000);
-  });
+
+// ---------- Discussion section ----------
+
+function discussion(id) {
+  const list = COMMENTS[id] || COMMENTS.default;
+  const items = list.map(([who, text], i) => `<div class="cmt"><b class="${who.startsWith("SCP-PERSON") ? "pname" : ""}">${esc(who)}</b>
+    <span class="when">${3 + i * 7} minutes ago</span><p>${esc(text)}</p></div>`).join("");
+  return `<div class="addendum discuss"><details class="collapse"><summary>+ Discussion (${list.length})</summary>
+    <div id="cmts">${items}</div>
+    <div class="cform"><input id="cname" maxlength="30" placeholder="Name"><textarea id="ctext" maxlength="300" placeholder="Write a comment..."></textarea>
+    <button class="sightbtn" id="cpost">Post Comment</button></div></details></div>`;
+}
+
+const REMOVALS = [
+  "[comment removed by SCP-PERSON]",
+  "[comment has breached containment]",
+  "[comment was here a second ago]",
+  "[comment edited by SCP-PERSON to just say \"nice\"]"
+];
+
+function wireDiscussion() {
+  const btn = document.getElementById("cpost"); if (!btn) return;
+  btn.onclick = () => {
+    const name = document.getElementById("cname").value.trim() || "Anonymous";
+    const text = document.getElementById("ctext").value.trim();
+    if (!text) return;
+    const d = document.createElement("div");
+    d.className = "cmt mine";
+    d.innerHTML = `<b>${esc(name)}</b> <span class="when">just now</span><p>${esc(text)}</p>`;
+    document.getElementById("cmts").appendChild(d);
+    document.getElementById("ctext").value = "";
+    setTimeout(() => {
+      d.querySelector("p").textContent = REMOVALS[Math.floor(Math.random() * REMOVALS.length)];
+      d.classList.add("removed");
+    }, 2500 + Math.random() * 2500);
+  };
+}
+
+// ---------- Don't Blink game ----------
+
+function renderBlink() {
+  document.title = "Don't Blink - Person Wiki";
+  let best = 0; try { best = parseFloat(localStorage.getItem("blinkbest") || "0"); } catch (e) {}
+  shell(`<h1 id="page-title">Guard Training: Don't Blink</h1>
+    <p>Every Site-31 guard must pass this test. Keep your cursor on SCP-PERSON (or keep your finger on it, on a phone). If you let go, look away, or switch tabs, SCP-PERSON is gone.</p>
+    <p>SCP-PERSON will try to get away. Don't let it.</p>
+    <div id="arena"><div id="target">${LOGO}</div><div id="amsg">PRESS AND HOLD ON SCP-PERSON TO START</div></div>
+    <div class="gamestats"><span>TIME: <b id="gt">0.0</b>s</span><span>YOUR RECORD: <b id="gb">${best.toFixed(1)}</b>s</span><span>SCP-PERSON'S RECORD: <b>∞</b></span></div>`);
+  startBlinkGame(best);
+}
+
+function startBlinkGame(best) {
+  const arena = document.getElementById("arena"), tgt = document.getElementById("target"), msg = document.getElementById("amsg");
+  const gt = document.getElementById("gt"), gb = document.getElementById("gb");
+  let playing = false, t0 = 0, x = 0, y = 0, vx = 0, vy = 0, raf, lostAt = 0;
+  function place() {
+    const w = arena.clientWidth - 70, h = arena.clientHeight - 70;
+    x = w / 2; y = h / 2; tgt.style.transform = `translate(${x}px, ${y}px)`; tgt.style.opacity = 1;
+  }
+  place();
+  function start(ev) {
+    if (playing) return; ev.preventDefault();
+    playing = true; t0 = performance.now(); msg.textContent = ""; vx = 0; vy = 0;
+    arena.classList.add("live");
+    loop();
+  }
+  function loop() {
+    if (!playing) return;
+    const s = (performance.now() - t0) / 1000;
+    gt.textContent = s.toFixed(1);
+    const speed = s < 1.5 ? 0.08 : 0.25 + s * 0.22;     // calm start, then gets faster the longer you last
+    vx += (Math.random() - 0.5) * speed; vy += (Math.random() - 0.5) * speed;
+    vx *= 0.96; vy *= 0.96;
+    if (s > 3 && Math.random() < 0.004 + s * 0.0008) { vx += (Math.random() - 0.5) * 30; vy += (Math.random() - 0.5) * 30; } // sudden lunge
+    const w = arena.clientWidth - 70, h = arena.clientHeight - 70;
+    x += vx; y += vy;
+    if (x < 0 || x > w) { vx = -vx; x = Math.max(0, Math.min(w, x)); }
+    if (y < 0 || y > h) { vy = -vy; y = Math.max(0, Math.min(h, y)); }
+    tgt.style.transform = `translate(${x}px, ${y}px)`;
+    raf = requestAnimationFrame(loop);
+  }
+  function lose(reason) {
+    if (!playing) return;
+    playing = false; lostAt = performance.now(); cancelAnimationFrame(raf); arena.classList.remove("live");
+    const s = (performance.now() - t0) / 1000;
+    tgt.style.opacity = 0;
+    if (s > best) { best = s; gb.textContent = s.toFixed(1); try { localStorage.setItem("blinkbest", s.toFixed(1)); } catch (e) {} }
+    const verdict = s < 3 ? "Training failed. Please report to the transfer office."
+      : s < 8 ? "Not bad. Guard #1101 lasted 3 days doing this."
+      : s < 15 ? "Impressive. You may watch Cell 12 for one (1) shift."
+      : "Unbelievable. SCP-PERSON would like to know your name.";
+    msg.innerHTML = `${esc(reason)}<br>POOF. GONE. You lasted ${s.toFixed(1)}s.<br><small>${esc(verdict)}</small><br><small>Tap or click to try again.</small>`;
+  }
+  tgt.addEventListener("mousedown", start);
+  tgt.addEventListener("touchstart", start, { passive: false });
+  tgt.addEventListener("mouseleave", () => lose("You looked away."));
+  document.addEventListener("mouseup", () => lose("You let go."));
+  document.addEventListener("touchend", () => lose("You let go."));
+  tgt.addEventListener("touchmove", ev => {
+    const t = ev.touches[0], r = tgt.getBoundingClientRect();
+    if (t.clientX < r.left || t.clientX > r.right || t.clientY < r.top || t.clientY > r.bottom) lose("You looked away.");
+    ev.preventDefault();
+  }, { passive: false });
+  window.addEventListener("blur", () => lose("You blinked."));
+  document.addEventListener("visibilitychange", () => { if (document.hidden) lose("You blinked."); });
+  const reset = () => { if (!playing && tgt.style.opacity === "0" && performance.now() - lostAt > 600) { place(); msg.textContent = "PRESS AND HOLD ON SCP-PERSON TO START"; } };
+  arena.addEventListener("mousedown", reset);
+  arena.addEventListener("touchstart", reset);
 }

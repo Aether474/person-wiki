@@ -314,6 +314,32 @@ On my last day at Site-31, the label said something different.
 It was really good. I still think about it.` }
     ]
   },
+
+  {
+    id: "recipe",
+    nav: "Break Room Recipe",
+    title: "Recovered Document: SCP-PERSON's Microwave Meal",
+    clearance: 2,
+    rating: 287,
+    sections: [
+      { heading: "", body: `The following recipe card was found taped inside the Site-31 break room microwave after Breach 001. The handwriting matches SCP-PERSON's. The microwave door was not opened.` },
+      { heading: "SCP-PERSON's Microwave Meal (serves 1, which is SCP-PERSON)", body: `INGREDIENTS:
+• 1 container of leftovers (your own, labeled, SCP-PERSON is not a thief)
+• 14 bags of chips (from the vending machine, do not open the vending machine)
+• 1 fork, borrowed from the Site Director's desk
+• 3 minutes of time nobody else knows you have
+
+STEPS:
+1. Breach containment. (See every other file on this wiki.)
+2. Place leftovers in the microwave. Set for 3:00.
+3. Leave the room. The food doesn't need you watching. Nobody needs to be watching. That's the point.
+4. Come back at 0:03. Not 0:00. Never let it beep. The beep is how they find you.
+5. Eat at Conference Room B during the meeting about breaches. Contribute one (1) good idea.
+6. Return to cell before the guard blinks again.
+7. Return the fork. Probably.` },
+      { heading: "Researcher's Note:", body: `Dr. ██████ tried the recipe and reports that it is "honestly pretty good." Dr. ██████ was then unable to find the way out of the break room for [[forty minutes]].` }
+    ]
+  },
   {
     id: "memos",
     nav: "Memos",
@@ -331,6 +357,43 @@ It was really good. I still think about it.` }
 
 // Missing poster: put a photo in the img/ folder and set its path here, e.g. "img/person.jpg"
 const POSTER_PHOTO = "";
+
+// Fake discussion comments under each file. Key = page id. "default" is used for pages without their own.
+const COMMENTS = {
+  default: [
+    ["Dr. ██████", "Good file. Very thorough. SCP-PERSON was not in their cell while I read it."],
+    ["Guard #1103", "I transferred out and I still check this page every day. I don't know why."],
+    ["SCP-PERSON", "nice"],
+    ["Site Director", "Who gave SCP-PERSON an account?"]
+  ],
+  main: [
+    ["Dr. ██████", "Upvoted. Still don't know how it gets out."],
+    ["Guard #1101", "\"Guards are ideally not to blink at all\" is an insane thing to put in a procedure and yet here we are"],
+    ["Anonymous Researcher", "Has anyone checked if the door is just unlocked?"],
+    ["SCP-PERSON", "it's not"],
+    ["SCP-PERSON", "(it is)"]
+  ],
+  breaches: [
+    ["Security Chief ████", "Please stop adding breaches to this log in the middle of my shift."],
+    ["Guard #1108", "Breach 031 was not my fault. I did not blink. I will die on this hill."],
+    ["SCP-PERSON", "you blinked"]
+  ],
+  "person-j": [
+    ["Guard #1104", "I miss the old SCP-PERSON."],
+    ["Dr. ██████", "It returned a stapler today. A stapler from 2019. I'm scared."],
+    ["SCP-PERSON-J", "Thank you for your feedback. I will continue to behave."],
+    ["SCP-PERSON", "lol"]
+  ],
+  tales: [
+    ["Anonymous", "The coffee one got me ngl"],
+    ["Guard #1102", "The night shift one is not fiction. I was there. I didn't reply either."],
+    ["SCP-PERSON", "you should have replied"]
+  ],
+  recipe: [
+    ["Dr. ██████", "Made this for dinner. Can confirm it's good. Can also confirm I lost 40 minutes."],
+    ["Site Director", "WHERE IS MY FORK"]
+  ]
+};
 
 // Headlines for the scrolling news ticker.
 const HEADLINES = [
