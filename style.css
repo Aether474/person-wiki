@@ -86,3 +86,16 @@ p.field b:first-child { color: #000; }
   .series { columns: 1; }
   #main { padding: 16px; }
 }
+
+/* Containment status widget */
+.status #st { font-family: "Courier New", monospace; font-weight: bold; font-size: 15px; letter-spacing: 2px; padding: 3px 0; }
+.status .contained { color: #2a7d2a; }
+.status .breached { color: #c00; animation: blink 1s steps(2) infinite; }
+.status small { font-size: 11px; color: #666; }
+@keyframes blink { 50% { opacity: .35; } }
+
+/* Log tables */
+table.log { border-collapse: collapse; width: 100%; margin: 8px 0 16px; font-size: 12px; }
+table.log th, table.log td { border: 1px solid #aaa; padding: 5px 8px; text-align: left; vertical-align: top; }
+table.log th { background: #e4e4e4; }
+table.log tr:nth-child(even) td { background: #f7f7f7; }
