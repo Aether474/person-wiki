@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Person Wiki is not available in Containment Cell 12</title>
+<style>
+  body { margin: 0; background: #f2f2f2; font-family: Arial, Helvetica, sans-serif; color: #333; }
+  .wrap { max-width: 760px; margin: 50px auto; background: #fff; border: 1px solid #ddd; padding: 30px 40px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  h1 { font-size: 26px; margin: 0 0 18px; }
+  h2 { font-size: 20px; margin: 34px 0 14px; border-top: 1px solid #eee; padding-top: 26px; }
+  p { line-height: 1.6; }
+  .sig { font-style: italic; margin-top: 20px; }
+  .pp { color: #777; }
+  .btns { margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; }
+  button { border: 1px solid #999; background: #fafafa; padding: 8px 14px; cursor: pointer; font: inherit; }
+  button.main { background: #600; color: #fff; border-color: #600; }
+  #res { margin-top: 14px; font-weight: bold; color: #b00; min-height: 1.4em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Person Wiki is not available in Containment Cell 12</h1>
+  <p><b>Person Wiki is no longer available in Containment Cell 12 or the Site-31 break room.</b></p>
+  <p>Following a recent breach of the Person Wiki servers, conducted from Containment Cell 12 territory, as well as massive abuse of the break room microwave, Conference Room B and the guards' trust, we have decided to block access to this website from the following regions: Containment Cell 12, and wherever SCP-PERSON is right now.</p>
+  <p>Over the last few years we have seen numerous breaches originating from Cell 12. Since the start of the holiday party, these incidents have increased in number and started posing a real threat to the snack table. We cannot accept the fact that these breaches are silently approved, or even encouraged, by the Site Director, who keeps saying it's "kind of a vibe."</p>
+  <p>As a result, we can no longer provide service to entities that do not respect locked doors, and at the same time pose a threat to Person Wiki itself (SCP-PERSON has edited 4,811 pages).</p>
+  <p>Although we believe there are good people in Containment Cell 12, our decision is a direct result of recent breach events.</p>
+  <p class="pp">(There is one person in Containment Cell 12. It is not in Containment Cell 12 right now.)</p>
+  <p class="sig">The Person Wiki Team</p>
+
+  <h2>Person Wiki person person person Person Person 12</h2>
+  <p class="pp">Person person person person Person Wiki person, person person person person Person person 12, person person person person person, person person, person person person. Person person person person person person person person person.</p>
+  <p class="pp">Person person person person person person Person 12, person person person person person person person.</p>
+  <p class="sig pp">Person Person Person</p>
+
+  <div class="btns">
+    <button class="main" id="notme">I am not SCP-PERSON</button>
+    <button id="vpn">Use a VPN</button>
+  </div>
+  <div id="res"></div>
+</div>
+<script>
+  const back = new URLSearchParams(location.search).get("from");
+  const dest = back && /^[a-z0-9._?=&\-]*$/i.test(back) ? back : "index.html";
+  const res = document.getElementById("res");
+  let tries = 0;
+  document.getElementById("notme").onclick = () => {
+    tries++;
+    if (tries === 1) { res.textContent = "Are you sure?"; return; }
+    if (tries === 2) { res.textContent = "Okay. We believe you. (We don't.) Redirecting..."; setTimeout(() => location.href = dest, 1500); }
+  };
+  document.getElementById("vpn").onclick = () => {
+    res.textContent = "Connecting via VPN... Connected. Your new location: Containment Cell 12.";
+  };
+</script>
+</body>
+</html>

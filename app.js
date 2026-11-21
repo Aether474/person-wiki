@@ -78,6 +78,7 @@ function shell(contentHtml) {
   viewingIndicator();
   cursorFigure();
   setTimeout(rareTakeover, 100);
+  maybeRegionBlock();
 }
 
 // The sidebar status flips to BREACHED at random, because of course it does.
@@ -764,4 +765,13 @@ function startBlinkGame(best) {
   const reset = () => { if (!playing && tgt.style.opacity === "0" && performance.now() - lostAt > 600) { place(); msg.textContent = "PRESS AND HOLD ON SCP-PERSON TO START"; } };
   arena.addEventListener("mousedown", reset);
   arena.addEventListener("touchstart", reset);
+}
+
+
+// About 1 in 60 visits: "region blocked" (the parody Wikidot block page). Not on the same page twice in a row.
+function maybeRegionBlock() {
+  if (Math.random() > 1 / 60) return;
+  try { if (sessionStorage.getItem("blocked")) return; sessionStorage.setItem("blocked", "1"); } catch (e) { return; }
+  const here = location.pathname.split("/").pop() + location.search;
+  setTimeout(() => { location.href = "blocked.html?from=" + encodeURIComponent(here || "index.html"); }, 1500);
 }

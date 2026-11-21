@@ -121,6 +121,9 @@ const COMMANDS = {
   "person.exe": () => runExe(),
   "run person.exe": () => runExe(),
 
+  vpn: () => slow(["connecting to VPN...", "routing through Containment Cell 12...", ["connected.", ""], ["warning: your region is blocked.", "err"]], () => setTimeout(() => location.href = "blocked.html?from=terminal.html", 1200)),
+  region: () => COMMANDS.vpn(),
+
   hello: () => slow([["hi", "warn"]]),
   hi: () => slow([["hi", "warn"]]),
   person: () => slow([["yes?", "warn"]]),
