@@ -1,0 +1,14 @@
+html, body { margin: 0; height: 100%; background: #050805; }
+body { color: #3f3; font: 15px/1.5 "Courier New", Consolas, monospace; text-shadow: 0 0 4px rgba(60,255,60,.5); }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,.3) 2px 3px); }
+#term { max-width: 900px; margin: 0 auto; padding: 24px 18px 60px; min-height: 100%; box-sizing: border-box; cursor: text; }
+#out div { white-space: pre-wrap; word-break: break-word; }
+#line { display: flex; gap: 8px; }
+.ps { color: #9f9; flex-shrink: 0; }
+#in { flex: 1; background: transparent; border: 0; outline: 0; color: #3f3; font: inherit; text-shadow: inherit; caret-color: #3f3; }
+.err { color: #f44; text-shadow: 0 0 4px rgba(255,60,60,.5); }
+.dim { color: #1a8a1a; }
+.warn { color: #ff3; }
+a { color: #9f9; }
+#out div { min-height: 1.5em; }

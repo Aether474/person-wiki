@@ -59,6 +59,7 @@ function shell(contentHtml) {
   document.getElementById("sight").onclick = showSighting;
   maybeAlarm();
   listenForSecret();
+  listenForTerminal();
   document.getElementById("clr").textContent = "Level " + getClearance();
   startStatus();
 }
@@ -335,4 +336,18 @@ function killScreen(scr, label) {
     scr.prepend(cv); drawStatic(cv);
     const m = document.createElement("div"); m.className = "lost"; m.textContent = label; scr.appendChild(m);
   }, 600);
+}
+
+
+// Secret: tap the logo 5 times quickly to open the guard terminal.
+function listenForTerminal() {
+  const logo = document.querySelector("#header a.logo");
+  let taps = 0, timer;
+  logo.addEventListener("click", ev => {
+    ev.preventDefault();
+    taps++;
+    clearTimeout(timer);
+    if (taps >= 5) { location.href = "terminal.html"; return; }
+    timer = setTimeout(() => { if (taps < 5) location.href = "index.html"; taps = 0; }, 600);
+  });
 }

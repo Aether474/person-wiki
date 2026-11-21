@@ -162,6 +162,7 @@ Result: [[Both are now missing.]]` }
     sections: [
       { heading: "Memo from O5-██", body: `To all staff: Please stop asking SCP-PERSON to "just pop in" to other departments. We know it works. That is the problem.` },
       { heading: "Memo from the Site Director", body: `We have spent $██ million on SCP-PERSON's containment cell this year. SCP-PERSON was found this morning in the break room using the microwave. It was SCP-PERSON's own food. It was labeled. SCP-PERSON is more respectful of the break room fridge than most of you. Take note.` },
+      { heading: "Memo from IT Security", body: `Reminder: the Site-31 guard terminal is for authorized guards only. Staff are NOT to access it by tapping the Person Wiki logo five times. We have no idea who set that up.` },
       { heading: "Memo from HR", collapsed: true, body: `SCP-PERSON is not an employee and cannot be put on the schedule, no matter how often SCP-PERSON shows up to shifts. SCP-PERSON has been given Employee of the Month regardless. We did not vote for this. The plaque was just there.` }
     ]
   }
