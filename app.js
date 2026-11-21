@@ -75,6 +75,7 @@ function startStatus() {
     return 30000 + Math.random() * 60000;                 // lulls you into a false sense of security
   }
   function tick() {
+    if (window._stuck) return;
     const breached = Math.random() < 0.5;
     st.textContent = breached ? "BREACHED" : "CONTAINED";
     st.className = breached ? "breached" : "contained";
@@ -248,6 +249,7 @@ function renderCCTV() {
       <p>${esc(c.note)}</p></div>`).join("");
   shell(`<h1 id="page-title">Site-31 Security Feeds</h1>
     <p>Live and archived footage from Site-31 security cameras assigned to SCP-PERSON. All cameras are pointed at SCP-PERSON's containment cell. None of them show SCP-PERSON's containment cell.</p>
+    <div id="feeds">
     <h2 class="section">CAM 00 — CONTAINMENT CELL 12 (LIVE)</h2>
     <div class="cam"><div class="screen live"><canvas id="noise" width="320" height="180"></canvas>
       <div class="scan"></div><div class="rec">● LIVE</div><div class="camlabel">CAM 00 — CELL 12</div>
@@ -255,10 +257,13 @@ function renderCCTV() {
       <p>Feed has displayed "SUBJECT NOT DETECTED" since installation, including while SCP-PERSON was confirmed to be in the cell.</p></div>
     <h2 class="section">Archived Feeds — Breach 031</h2>
     <div class="camgrid">${cams}</div>
+    <div id="ohshit">oh shit</div>
+    </div>
     <div class="addendum"><details class="collapse"><summary>+ Full Multi-Camera Recording, Breach 031</summary>
       <div class="screen"><video src="cctv/all.mp4" controls muted loop playsinline preload="none"></video><div class="scan"></div></div>
       <p>Investigators note that SCP-PERSON appears on Cam 01 and Cam 02 at the same time. SCP-PERSON maintains this was "a different person." SCP-PERSON is the only person.</p></details></div>`);
   startNoise();
+  scheduleCameraFailure();
 }
 
 function startNoise() {
@@ -280,4 +285,54 @@ function startNoise() {
 
 function renderHomeExtras() {
   const el = document.getElementById("days"); if (el) el.textContent = "0";
+}
+
+
+function drawStatic(cv) {
+  const ctx = cv.getContext("2d"), img = ctx.createImageData(cv.width, cv.height);
+  (function draw() {
+    if (!cv.isConnected) return;
+    for (let i = 0; i < img.data.length; i += 4) {
+      const v = 20 + Math.random() * 80;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    requestAnimationFrame(draw);
+  })();
+}
+
+// After a while the archived cameras cut out one at a time, then the live feed, then: oh shit.
+function scheduleCameraFailure() {
+  const screens = [...document.querySelectorAll(".camgrid .screen")].sort(() => Math.random() - 0.5);
+  let t = 15000 + Math.random() * 15000;
+  screens.forEach(scr => {
+    setTimeout(() => killScreen(scr, "SIGNAL LOST"), t);
+    t += 1500 + Math.random() * 5000;
+  });
+  setTimeout(() => {
+    const msg = document.getElementById("livemsg");
+    if (msg) msg.textContent = "SUBJECT DETECTED";
+    setTimeout(() => {
+      const live = document.querySelector(".screen.live");
+      if (live) { live.innerHTML = '<div class="dead"></div>'; }
+      const st = document.getElementById("st");
+      if (st) { st.textContent = "BREACHED"; st.className = "breached"; window._stuck = true; }
+      setTimeout(() => {
+        document.getElementById("feeds").classList.add("down");
+        document.getElementById("ohshit").style.display = "flex";
+      }, 1800);
+    }, 1200);
+  }, t + 2000);
+}
+
+function killScreen(scr, label) {
+  scr.classList.add("glitch");
+  setTimeout(() => {
+    scr.classList.remove("glitch");
+    const v = scr.querySelector("video"); if (v) v.remove();
+    const rec = scr.querySelector(".rec"); if (rec) rec.textContent = "● NO SIGNAL";
+    const cv = document.createElement("canvas"); cv.width = 240; cv.height = 135;
+    scr.prepend(cv); drawStatic(cv);
+    const m = document.createElement("div"); m.className = "lost"; m.textContent = label; scr.appendChild(m);
+  }, 600);
 }
