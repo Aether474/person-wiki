@@ -55,7 +55,7 @@ h2.section { font-size: 15px; color: #333; margin: 22px 0 6px; }
 .classbar div:last-child { border-right: 0; }
 .classbar small { display: block; font-size: 10px; color: #777; text-transform: uppercase; letter-spacing: 1px; }
 .classbar b { font-size: 14px; }
-.safe b { color: #2a7d2a; } .euclid b { color: #c78c00; } .keter b { color: #b00; } .thaumiel b { color: #555; } .apollyon b { color: #600; }
+.safe b { color: #2a7d2a; } .euclid b { color: #c78c00; } .keter b { color: #b00; } .thaumiel b { color: #555; } .apollyon b { color: #600; } .person b { color: #7a2fb0; }
 
 p.field b:first-child { color: #000; }
 .redact { background: #000; color: #000; padding: 0 2px; cursor: help; transition: color .2s, background .2s; }

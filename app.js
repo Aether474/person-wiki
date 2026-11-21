@@ -44,7 +44,7 @@ function shell(contentHtml) {
     <div id="side">
       <div class="box status"><h3>Containment Status</h3>
         <div id="st" class="contained">CONTAINED</div>
-        <small>Last seen: <span id="loc">Containment Cell 12</span></small></div>
+        <small>Facility: Site-404</small><br><small>Last seen: <span id="loc">Containment Cell 12, Site-404</span></small></div>
       <div class="box"><h3>SCP-PERSON Files</h3><ul>${list}</ul></div>
       <div class="box"><h3>Your Clearance</h3><span id="clr"></span></div>
     </div>
@@ -60,16 +60,24 @@ function shell(contentHtml) {
 // The sidebar status flips to BREACHED at random, because of course it does.
 function startStatus() {
   const st = document.getElementById("st"), loc = document.getElementById("loc");
+  // Pick a wait time with no pattern: sometimes a split second, sometimes a minute or more.
+  function nextDelay() {
+    const r = Math.random();
+    if (r < 0.15) return 300 + Math.random() * 1200;      // quick flicker
+    if (r < 0.55) return 2000 + Math.random() * 8000;     // a few seconds
+    if (r < 0.85) return 10000 + Math.random() * 20000;   // a while
+    return 30000 + Math.random() * 60000;                 // lulls you into a false sense of security
+  }
   function tick() {
-    const breached = Math.random() < 0.45;
+    const breached = Math.random() < 0.5;
     st.textContent = breached ? "BREACHED" : "CONTAINED";
     st.className = breached ? "breached" : "contained";
     loc.textContent = breached
       ? LOCATIONS[1 + Math.floor(Math.random() * (LOCATIONS.length - 1))]
       : LOCATIONS[0];
-    setTimeout(tick, 2500 + Math.random() * 5000);
+    setTimeout(tick, nextDelay());
   }
-  setTimeout(tick, 3000);
+  setTimeout(tick, nextDelay());
 }
 
 function renderSection(s) {
@@ -104,9 +112,11 @@ function renderDoc() {
     top = `<div class="img-block">${photo}<p>${esc(doc.photoCaption || "")}</p></div>
       <p class="field"><b>Item #:</b> ${esc(doc.item)}</p>
       <p class="field"><b>Common Name:</b> ${esc(doc.commonName)}</p>
+      ${doc.facility ? `<p class="field"><b>Assigned Facility:</b> ${esc(doc.facility)} (location <span class="redact">unknown</span>)</p>` : ""}
       <div class="classbar">
         <div><small>Clearance</small><b>Level ${doc.clearance}</b></div>
-        <div class="${doc.objectClass.toLowerCase()}"><small>Object Class</small><b>${esc(doc.objectClass)}</b></div>
+        ${doc.facility ? `<div><small>Facility</small><b>${esc(doc.facility)}</b></div>` : ""}
+        <div class="${doc.objectClass.toLowerCase().replace(/[^a-z]/g, "")}"><small>Object Class</small><b>${esc(doc.objectClass)}</b></div>
       </div>`;
   }
 
