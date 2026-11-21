@@ -66,6 +66,7 @@ function shell(contentHtml) {
   document.getElementById("sight").onclick = showSighting;
   maybeAlarm();
   listenForSecret();
+  listenForKonami();
   listenForTerminal();
   tabTitleTrick();
   setTimeout(vanishingWords, 50);
@@ -650,4 +651,23 @@ function nightShift() {
   document.getElementById("loc").textContent = "Guards asleep. Location unknown.";
   const box = document.querySelector(".box.status h3");
   box.textContent = "Containment Status (Night Shift)";
+}
+
+
+// Secret: Konami code (up up down down left right left right b a) flips the site.
+function listenForKonami() {
+  const code = ["arrowup","arrowup","arrowdown","arrowdown","arrowleft","arrowright","arrowleft","arrowright","b","a"];
+  let pos = 0;
+  document.addEventListener("keydown", ev => {
+    const k = ev.key.toLowerCase();
+    pos = (k === code[pos]) ? pos + 1 : (k === code[0] ? 1 : 0);
+    if (pos < code.length) return;
+    pos = 0;
+    const flipped = document.body.classList.toggle("flipped");
+    let note = document.getElementById("flipnote");
+    if (!note) { note = document.createElement("div"); note.id = "flipnote"; document.body.appendChild(note); }
+    note.textContent = flipped ? "SCP-PERSON HAS BREACHED THE WEBSITE" : "website re-contained. for now.";
+    note.className = "show";
+    setTimeout(() => note.className = "", 3000);
+  });
 }

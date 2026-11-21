@@ -225,3 +225,10 @@ body.night #side .box { border-color: #333; }
 body.night #side h3 { color: #d44; }
 body.night .img-block, body.night .rating { background: #1d1d1d; border-color: #444; color: #999; }
 body.night .rating button { background: #333; color: #ccc; border-color: #555; }
+
+/* Konami flip */
+body { transition: transform .8s; }
+body.flipped { transform: rotate(180deg); }
+#flipnote { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%) scale(.9); background: #b00; color: #fff;
+  font: bold 22px "Courier New", monospace; padding: 14px 24px; letter-spacing: 2px; z-index: 50; opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; text-align: center; }
+#flipnote.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
