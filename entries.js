@@ -230,6 +230,90 @@ The keychain has a key on it. The key fits Cell 12.` }
       }}
     ]
   },
+
+  {
+    id: "person-j",
+    nav: "SCP-PERSON-J",
+    title: "SCP-PERSON-J",
+    item: "SCP-PERSON-J",
+    commonName: "\"Person (Behaving)\"",
+    objectClass: "Safe",
+    facility: "Site-31",
+    clearance: 1,
+    rating: 611,
+    photo: "",
+    photoCaption: "SCP-PERSON-J, in its cell, where it is supposed to be. Staff find this photo upsetting.",
+    sections: [
+      { heading: "Special Containment Procedures:", body: `None required. SCP-PERSON-J stays in its cell.
+
+Staff are asked to remain calm about this.` },
+      { heading: "Description:", body: `SCP-PERSON-J looks exactly like SCP-PERSON in every way. Unlike SCP-PERSON, SCP-PERSON-J:
+
+• Stays in its containment cell
+• Replies to group chat messages within two (2) minutes
+• Shows up ten (10) minutes early to everything
+• Has never been found in the break room
+• Fills out its own incident reports, correctly, on time
+
+Staff morale has dropped 60% since SCP-PERSON-J appeared. Multiple guards have asked for SCP-PERSON back.` },
+      { heading: "Addendum PERSON-J-1:", collapsed: true, body: `After a three-week investigation, it has been confirmed that SCP-PERSON-J is SCP-PERSON doing a bit.
+
+The bit has now lasted four weeks. Nobody knows when the bit ends. [[SCP-PERSON may not know either.]]` }
+    ]
+  },
+
+  {
+    id: "complaints",
+    nav: "Other SCPs Complain",
+    title: "Statements From Other SCPs Regarding SCP-PERSON",
+    clearance: 2,
+    rating: 498,
+    sections: [
+      { heading: "", body: `After repeated incidents involving SCP-PERSON visiting other containment cells (see Breach Log, Breach 004), statements were collected from affected SCPs. Where an SCP cannot speak, its handlers have described its feelings as accurately as possible.` },
+      { heading: "SCP-173", body: `Handler statement: "173 moves when you blink. That's its whole thing. Person also disappears when you blink. 173 has been sulking in the corner for two weeks. We think it feels Person stole its gimmick."` },
+      { heading: "SCP-999", body: `Handler statement: "999 loves Person, which isn't saying much, because 999 loves everyone. But it gets visibly excited whenever Person shows up, and Person shows up a lot. They have a handshake now."` },
+      { heading: "SCP-682", body: `Handler statement: "682 hates everything. It hates Person the most. Person keeps visiting anyway. Last week Person brought it a birthday card. 682 destroyed the card. 682 kept the envelope."` },
+      { heading: "SCP-████", collapsed: true, body: `Statement: "[[they keep moving my stuff. not in a bad way. they organized it. it's actually really nice now. please don't tell them I said that.]]"` }
+    ]
+  },
+
+  {
+    id: "tales",
+    nav: "Tales",
+    title: "SCP-PERSON Tales",
+    clearance: 1,
+    rating: 384,
+    sections: [
+      { heading: "", body: `Stories from the staff of Site-31. Most of them are true. Some of them are true twice.` },
+      { heading: "A Guard's First Day", collapsed: true, body: `They tell you three things on your first day watching Cell 12: don't blink, don't look away, and don't take it personally.
+
+I didn't blink. I used the eye drops. I stared at that cell for nine straight hours like my life depended on it, because they told me it did. The cell was empty the whole time. I didn't notice until hour eight. I'm still not sure when it became empty.
+
+At the end of my shift, someone tapped me on the shoulder and handed me a coffee. "You were doing great," SCP-PERSON said. Then SCP-PERSON walked back into the cell and closed the door.
+
+It was the right order, too. Oat milk, two sugars. I never told anyone that.` },
+      { heading: "The Night Shift", collapsed: true, body: `3:00 AM. The group chat says "Person is typing..."
+
+I watch it for ten minutes. Twenty. Forty. Still typing. Nobody types for forty minutes. I start to wonder what kind of message takes forty minutes.
+
+At 3:41 it finally comes through. One word.
+
+"hey"
+
+I look up from my phone. SCP-PERSON is sitting at the desk across from me, holding a phone, waving.
+
+The cell camera behind me still shows SCP-PERSON asleep in the cell.
+
+I did not reply.` },
+      { heading: "Lunch", collapsed: true, body: `The microwave in the break room beeps at 12:03 every day. Nobody sets it. There's always something inside, labeled in neat handwriting: "PERSON. DO NOT EAT."
+
+On my last day at Site-31, the label said something different.
+
+"for you :)"
+
+It was really good. I still think about it.` }
+    ]
+  },
   {
     id: "memos",
     nav: "Memos",
@@ -247,6 +331,21 @@ The keychain has a key on it. The key fits Cell 12.` }
 
 // Missing poster: put a photo in the img/ folder and set its path here, e.g. "img/person.jpg"
 const POSTER_PHOTO = "";
+
+// Headlines for the scrolling news ticker.
+const HEADLINES = [
+  "BREAKING: SCP-PERSON spotted in the break room",
+  "UPDATE: SCP-PERSON not spotted in the break room",
+  "UPDATE: SCP-PERSON was the one who reported the sighting",
+  "Site-31 Days Since Last Breach counter reaches new record of 0",
+  "Guard #1109 starts today. Guard #1109 has been told not to blink",
+  "Gift shop restocks Person-Proof Door Locks. Locks have since breached containment",
+  "Conference Room B meeting on breaches postponed. SCP-PERSON already took notes",
+  "SCP-173 still sulking",
+  "SCP-PERSON-J continues to behave. Staff remain concerned",
+  "Vending machine reports missing chips. Vending machine was not opened",
+  "UPDATE: SCP-PERSON was the one who wrote this ticker"
+];
 
 // Fake "where is Person right now" locations for the sidebar.
 const LOCATIONS = [

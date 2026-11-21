@@ -43,6 +43,7 @@ function shell(contentHtml) {
     <a href="badge.html">Get Your Badge</a>
     <a href="about.html">About</a>
   </div></div>
+  <div id="ticker"><b>SITE-31 NEWS</b><div class="tk"><span id="tkt"></span></div></div>
   <div id="layout">
     <div id="side">
       <div class="box status"><h3>Containment Status</h3>
@@ -60,6 +61,7 @@ function shell(contentHtml) {
   <div id="footer">Person Wiki is a joke. SCP-PERSON is real, unfortunately.<br>CCTV footage from a camera effect by Luke Newell.<br>
   Format inspired by the SCP Wiki (scp-wiki.wikidot.com), used under CC BY-SA 3.0. This site's text is likewise CC BY-SA 3.0.</div>
   <div id="gate"><div class="card"></div></div>
+  <div id="viewing">👁 <span id="vtxt">1 other person viewing this page</span></div>
   <div id="alarm"><span>⚠ SCP-PERSON CONTAINMENT BREACH IN PROGRESS. ALL PERSONNEL REMAIN CALM. ⚠</span><button onclick="this.parentNode.style.display='none'">dismiss</button></div>`;
   document.getElementById("sight").onclick = showSighting;
   maybeAlarm();
@@ -68,7 +70,13 @@ function shell(contentHtml) {
   tabTitleTrick();
   setTimeout(vanishingWords, 50);
   document.getElementById("clr").textContent = "Level " + getClearance();
+  nightShift();
   startStatus();
+  statusClicks();
+  startTicker();
+  viewingIndicator();
+  cursorFigure();
+  setTimeout(rareTakeover, 100);
 }
 
 // The sidebar status flips to BREACHED at random, because of course it does.
@@ -83,8 +91,8 @@ function startStatus() {
     return 30000 + Math.random() * 60000;                 // lulls you into a false sense of security
   }
   function tick() {
-    if (window._stuck) return;
-    const breached = Math.random() < 0.5;
+    if (window._stuck || isIdk()) return setTimeout(tick, 2000);
+    const breached = window._night ? true : Math.random() < 0.5;
     st.textContent = breached ? "BREACHED" : "CONTAINED";
     st.className = breached ? "breached" : "contained";
     loc.textContent = breached
@@ -92,6 +100,7 @@ function startStatus() {
       : LOCATIONS[0];
     setTimeout(tick, nextDelay());
   }
+  if (isIdk()) showIdk();
   setTimeout(tick, nextDelay());
 }
 
@@ -141,6 +150,7 @@ function renderDoc() {
     <h1 id="page-title">${esc(doc.title)}</h1>
     ${top}
     ${doc.sections.map(renderSection).join("")}
+    ${doc.id === "main" ? '<p class="hidden-msg">if you can read this, Person is behind you.</p>' : ""}
     <p style="clear:both;margin-top:30px">« <a href="doc.html?id=main">SCP-PERSON</a> »</p>
     ${pageInfo(doc.id)}`);
 
@@ -175,7 +185,8 @@ function renderHome() {
     <p>Welcome to the Person Wiki, the official archive for <a href="doc.html?id=main">SCP-PERSON</a>: one humanoid entity, one containment cell, and a breach count we've stopped reporting to management.</p>
     <p style="text-align:center;font-size:16px;letter-spacing:2px"><b>SECURE. CONTAIN. LOSE TRACK OF.</b></p>
     <div class="counter"><small>DAYS SINCE LAST SCP-PERSON BREACH</small><b>0</b><small>Previous record: 0</small></div>
-    <h2 class="section">Files</h2><ul>${files}</ul>`);
+    <h2 class="section">Files</h2><ul>${files}</ul>
+    <p class="hidden-msg">you found the hidden text. Person found it first. Person left a note: "hi :)"</p>`);
 }
 
 function renderAbout() {
@@ -546,4 +557,97 @@ function drawBadge(name) {
   for (let x = 28, i = 0; x < 610; i++) { const w = 1 + hashNum(name + i) % 4; if (i % 2 === 0) c.fillRect(x, 330, w, 40); x += w + 1; }
   c.fillStyle = "#666"; c.font = "10px Courier New";
   c.fillText("IF FOUND, RETURN TO SITE-31. IF SCP-PERSON FOUND, ALSO RETURN TO SITE-31.", 28, 388);
+}
+
+
+// ---------- Ticker ----------
+function startTicker() {
+  const el = document.getElementById("tkt");
+  const list = window._night
+    ? ["NIGHT SHIFT: all guards asleep", "NIGHT SHIFT: SCP-PERSON awake", ...HEADLINES]
+    : [...HEADLINES].sort(() => Math.random() - 0.5);
+  el.textContent = list.join("   ✦   ") + "   ✦   ";
+  el.style.animationDuration = Math.max(40, el.textContent.length / 6) + "s";
+}
+
+// ---------- "1 other person viewing" ----------
+function viewingIndicator() {
+  const box = document.getElementById("viewing"), t = document.getElementById("vtxt");
+  setTimeout(() => box.classList.add("show"), 2500);
+  (function loop() {
+    setTimeout(() => {
+      t.textContent = "SCP-PERSON is viewing this page"; box.classList.add("creepy");
+      setTimeout(() => { t.textContent = "1 other person viewing this page"; box.classList.remove("creepy"); loop(); }, 600 + Math.random() * 900);
+    }, 8000 + Math.random() * 25000);
+  })();
+}
+
+// ---------- Little figure that follows the cursor sometimes ----------
+function cursorFigure() {
+  if (!window.matchMedia("(pointer: fine)").matches) return;
+  const fig = document.createElement("div");
+  fig.id = "follower";
+  fig.innerHTML = '<svg viewBox="0 0 20 30"><circle cx="10" cy="6" r="5"/><path d="M2 30 Q2 13 10 13 Q18 13 18 30 Z"/></svg>';
+  document.body.appendChild(fig);
+  let mx = -100, my = -100, fx = -100, fy = -100, on = false;
+  document.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; });
+  (function follow() {
+    fx += (mx - 28 - fx) * 0.12; fy += (my + 14 - fy) * 0.12;
+    fig.style.transform = `translate(${fx}px, ${fy}px)`;
+    requestAnimationFrame(follow);
+  })();
+  (function loop() {
+    setTimeout(() => {
+      fx = mx - 120; fy = my + 40;
+      fig.classList.add("on"); on = true;
+      setTimeout(() => { fig.classList.remove("on"); on = false; loop(); }, 2000 + Math.random() * 2000);
+    }, 30000 + Math.random() * 60000);
+  })();
+}
+
+// ---------- 1 in 50 visits: person person person ----------
+function rareTakeover() {
+  if (Math.random() > 0.02 && !location.search.includes("takeover")) return;
+  const main = document.getElementById("main");
+  setTimeout(() => {
+    const cover = document.createElement("div");
+    cover.id = "takeover";
+    cover.textContent = "person ".repeat(1500);
+    main.appendChild(cover);
+    setTimeout(() => cover.remove(), 2000);
+  }, 3000 + Math.random() * 5000);
+}
+
+// ---------- Click the status 10 times: it gives up ----------
+function isIdk() { try { return localStorage.getItem("idk") === "1"; } catch (e) { return false; } }
+function showIdk() {
+  const st = document.getElementById("st"), loc = document.getElementById("loc");
+  st.textContent = "idk"; st.className = "idk"; loc.textContent = "¯\\_(ツ)_/¯";
+}
+function statusClicks() {
+  const st = document.getElementById("st");
+  let n = 0, timer;
+  st.style.cursor = "pointer";
+  st.addEventListener("click", () => {
+    n++; clearTimeout(timer); timer = setTimeout(() => n = 0, 3000);
+    if (n < 10) return;
+    n = 0;
+    try {
+      if (isIdk()) { localStorage.removeItem("idk"); st.textContent = "fine."; st.className = "contained"; }
+      else { localStorage.setItem("idk", "1"); showIdk(); }
+    } catch (e) { showIdk(); }
+  });
+}
+
+// ---------- 3 AM: night shift mode ----------
+function nightShift() {
+  const h = new Date().getHours();
+  if (h !== 3 && !location.search.includes("night")) return;
+  window._night = true;
+  document.body.classList.add("night");
+  const st = document.getElementById("st");
+  st.textContent = "BREACHED"; st.className = "breached";
+  document.getElementById("loc").textContent = "Guards asleep. Location unknown.";
+  const box = document.querySelector(".box.status h3");
+  box.textContent = "Containment Status (Night Shift)";
 }
