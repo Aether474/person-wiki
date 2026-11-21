@@ -140,3 +140,44 @@ table.log tr:nth-child(even) td { background: #f7f7f7; }
   background: rgba(0,0,0,.8); animation: fadein 1.5s; }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 @media (max-width: 720px) { #ohshit { font-size: 40px; } }
+
+/* Vanishing words */
+.pw { transition: opacity .15s; }
+.pw.gone { opacity: 0; }
+
+/* Page info */
+.pageinfo { clear: both; border-top: 1px solid #ddd; margin-top: 24px; padding-top: 8px; font-size: 11px; color: #666; }
+.dimtxt { color: #999; }
+
+/* Missing poster */
+.poster { max-width: 460px; margin: 0 auto 16px; background: #fffdf3; border: 1px solid #bbb; box-shadow: 2px 3px 8px rgba(0,0,0,.2);
+  padding: 20px 26px 0; font-family: Arial, sans-serif; text-align: center; transform: rotate(-1deg); }
+.ptop { font: 900 64px Impact, "Arial Black", sans-serif; color: #b00; letter-spacing: 4px; line-height: 1; }
+.psub { font-weight: bold; font-size: 18px; margin: 6px 0 14px; }
+.pphoto { border: 3px solid #222; background: #222; margin: 0 auto 14px; width: 260px; height: 300px; overflow: hidden; }
+.pphoto img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.2); }
+.silhouette { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888; font: bold 12px "Courier New", monospace; gap: 10px; }
+.silhouette svg { width: 140px; height: 140px; opacity: .5; }
+.pfacts { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+.pfacts td { border-bottom: 1px dashed #bbb; padding: 4px 4px; vertical-align: top; }
+.pfacts td:first-child { font-weight: bold; width: 120px; }
+.pwarn { margin: 14px 0 6px; font-weight: 900; color: #b00; font-size: 15px; }
+.preward { font-weight: bold; margin-bottom: 14px; }
+.tabs { display: flex; border-top: 2px dashed #999; margin: 0 -26px; }
+.tabs div { flex: 1; border-right: 1px dashed #999; font-size: 9px; padding: 8px 0; writing-mode: vertical-rl; text-orientation: mixed; height: 70px; display: flex; align-items: center; justify-content: center; }
+.tabs div:last-child { border-right: 0; }
+@media print { #header, #topbar, #side, #footer, #alarm, .sightbtn { display: none !important; } #main { border: 0; box-shadow: none; } .poster { transform: none; box-shadow: none; } }
+
+/* Shop */
+.shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin: 14px 0; }
+.item { border: 1px solid #ccc; background: #fafafa; padding: 12px; text-align: center; display: flex; flex-direction: column; }
+.item .icon { font-size: 42px; }
+.item .price { color: #b00; font-weight: bold; margin: 2px 0; }
+.item p { font-size: 11px; color: #555; flex: 1; }
+.sightbtn.soldout { background: #777; cursor: default; font-size: 11px; }
+
+/* Badge */
+.badgeform { display: flex; gap: 8px; max-width: 420px; margin: 12px 0; }
+.badgeform input { flex: 1; padding: 7px; border: 1px solid #aaa; font: inherit; }
+.badgeform .sightbtn { width: auto; padding: 7px 14px; }
+#badge { display: none; width: 100%; max-width: 640px; border: 1px solid #999; box-shadow: 0 3px 10px rgba(0,0,0,.2); border-radius: 10px; }

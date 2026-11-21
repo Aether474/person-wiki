@@ -153,6 +153,83 @@ Result: [[Both are now missing.]]` }
     ]
   },
 
+
+  {
+    id: "exploration",
+    nav: "Exploration Log",
+    title: "SCP-PERSON Exploration Log E-1",
+    clearance: 3,
+    rating: 466,
+    sections: [
+      { heading: "", body: `Exploration E-1 was authorized to determine how SCP-PERSON leaves Containment Cell 12. SCP-PERSON was confirmed to be absent at the time. Team: Agents ████, ████ and ████ (callsign "Blinkless").` },
+      { heading: "Log", table: {
+        cols: ["Time", "Entry"],
+        rows: [
+          ["00:00", "Team enters Cell 12. Cell is empty. Standard."],
+          ["00:02", "Cell appears larger than the blueprints. Agent ████: \"It's just a room.\""],
+          ["00:05", "Team finds a rug. No rug is on record for Cell 12."],
+          ["00:09", "Team finds a door on the back wall. Door is labeled \"NOT AN EXIT.\""],
+          ["00:14", "Door opens into the break room. The break room is on the other side of Site-31."],
+          ["00:15", "Microwave is running. 0:03 left on the timer. Nobody is there."],
+          ["00:18", "Microwave beeps. Food inside is labeled \"PERSON. DO NOT EAT.\" Team does not eat it."],
+          ["00:23", "Team goes back through the door. Door now opens into Conference Room B. A meeting about breaches is in progress. SCP-PERSON is taking notes. SCP-PERSON waves."],
+          ["00:24", "Agent ████ blinks."],
+          ["00:24", "SCP-PERSON is gone. Agent ████ is also gone."],
+          ["00:31", "Remaining team returns to Cell 12. Missing agent is sitting in Cell 12. Agent: \"Honestly it's kind of nice in here.\""],
+          ["00:40", "Command orders the team out. Team cannot find the door they came in through."],
+          ["00:41", "The door is opened from outside by SCP-PERSON. SCP-PERSON: \"You guys good?\""]
+        ]
+      }},
+      { heading: "Note:", body: `Exploration E-2 has been cancelled. The E-2 team went anyway. [[They say it's nice in there.]]` }
+    ]
+  },
+
+  {
+    id: "two-persons",
+    nav: "Incident: Two Persons",
+    title: "Incident Report PERSON-12: \"The Two Persons\"",
+    clearance: 3,
+    rating: 433,
+    sections: [
+      { heading: "Summary:", body: `During the Site-31 holiday party, SCP-PERSON was confirmed to be in Containment Cell 12 (on camera, all night) and at the holiday party (in 41 photos, all night). Both were SCP-PERSON.` },
+      { heading: "Details:", body: `The SCP-PERSON at the party took part in Secret Santa, won the ugly sweater contest, and was seen dancing badly near the snack table.
+
+The SCP-PERSON in Cell 12 was seen on camera eating a slice of the holiday party cake. No cake was brought to Cell 12.
+
+Both were interviewed at the same time, in separate rooms, by separate researchers. Both gave identical answers to every question. Both asked if they could have the other one's cake.
+
+When both were escorted into the same room, there was only one SCP-PERSON. SCP-PERSON said "what?"` },
+      { heading: "Conclusion:", body: `After a review, Site-31 command has decided not to think about it.` },
+      { heading: "Addendum: Secret Santa", collapsed: true, body: `Guard ████, who drew SCP-PERSON in Secret Santa, received a keychain from the city from Breach 007, the one with no record of existing.
+
+The keychain has a key on it. The key fits Cell 12.` }
+    ]
+  },
+
+  {
+    id: "roster",
+    nav: "Guard Roster",
+    title: "SCP-PERSON Guard Roster",
+    clearance: 2,
+    rating: 357,
+    sections: [
+      { heading: "", body: `All guards assigned to SCP-PERSON's cell since containment began. Average time on assignment: 6 days. Turnover is being looked into.` },
+      { heading: "Roster", table: {
+        cols: ["Guard", "Assigned", "Status", "Reason"],
+        rows: [
+          ["#1101", "3 days", "Transferred", "Blinked."],
+          ["#1102", "11 days", "Transferred", "Saw SCP-PERSON in the mirror. The guard's own mirror. At home."],
+          ["#1103", "1 day", "Transferred", "SCP-PERSON said hi."],
+          ["#1104", "2 weeks", "Transferred", "SCP-PERSON remembered the guard's birthday. Nobody else did."],
+          ["#1105", "4 days", "Transferred", "Asked to be moved to SCP-173 duty. \"At least that one stays put.\""],
+          ["#1106", "6 days", "Fired", "Left the guard terminal override password on a sticky note on Cell 12's door. The note said: [[blinkless]]"],
+          ["#1107", "9 months", "Still assigned", "Has not reported in for 9 months. Paychecks are still being cashed. By SCP-PERSON."],
+          ["#1108", "0 days", "Transferred", "Was assigned, walked to Cell 12, looked in, said \"nope.\""],
+          ["████", "████", "[[Is SCP-PERSON]]", "Do not ask about guard ████."]
+        ]
+      }}
+    ]
+  },
   {
     id: "memos",
     nav: "Memos",
@@ -167,6 +244,9 @@ Result: [[Both are now missing.]]` }
     ]
   }
 ];
+
+// Missing poster: put a photo in the img/ folder and set its path here, e.g. "img/person.jpg"
+const POSTER_PHOTO = "";
 
 // Fake "where is Person right now" locations for the sidebar.
 const LOCATIONS = [

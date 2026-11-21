@@ -38,7 +38,9 @@ function shell(contentHtml) {
     <a href="doc.html?id=main">SCP-PERSON</a>
     <a href="doc.html?id=breaches">Breach Log</a>
     <a href="cctv.html">Security Feeds</a>
-    <a href="doc.html?id=hearsay">Staff Hearsay</a>
+    <a href="missing.html">Missing Poster</a>
+    <a href="shop.html">Gift Shop</a>
+    <a href="badge.html">Get Your Badge</a>
     <a href="about.html">About</a>
   </div></div>
   <div id="layout">
@@ -46,7 +48,10 @@ function shell(contentHtml) {
       <div class="box status"><h3>Containment Status</h3>
         <div id="st" class="contained">CONTAINED</div>
         <small>Facility: Site-31</small><br><small>Last seen: <span id="loc">Containment Cell 12, Site-31</span></small></div>
-      <div class="box"><h3>SCP-PERSON Files</h3><ul>${list}<li><a href="cctv.html">Security Feeds</a></li></ul></div>
+      <div class="box"><h3>SCP-PERSON Files</h3><ul>${list}</ul></div>
+      <div class="box"><h3>Extras</h3><ul>
+        <li><a href="cctv.html">Security Feeds</a></li><li><a href="missing.html">Missing Poster</a></li>
+        <li><a href="shop.html">Gift Shop</a></li><li><a href="badge.html">Get Your Badge</a></li></ul></div>
       <div class="box"><button id="sight" class="sightbtn">Report a Sighting</button></div>
       <div class="box"><h3>Your Clearance</h3><span id="clr"></span></div>
     </div>
@@ -60,6 +65,8 @@ function shell(contentHtml) {
   maybeAlarm();
   listenForSecret();
   listenForTerminal();
+  tabTitleTrick();
+  setTimeout(vanishingWords, 50);
   document.getElementById("clr").textContent = "Level " + getClearance();
   startStatus();
 }
@@ -134,7 +141,8 @@ function renderDoc() {
     <h1 id="page-title">${esc(doc.title)}</h1>
     ${top}
     ${doc.sections.map(renderSection).join("")}
-    <p style="clear:both;margin-top:30px">« <a href="doc.html?id=main">SCP-PERSON</a> »</p>`);
+    <p style="clear:both;margin-top:30px">« <a href="doc.html?id=main">SCP-PERSON</a> »</p>
+    ${pageInfo(doc.id)}`);
 
   window._rating = doc.rating;
   if (doc.clearance > getClearance()) showGate(doc);
@@ -350,4 +358,192 @@ function listenForTerminal() {
     if (taps >= 5) { location.href = "terminal.html"; return; }
     timer = setTimeout(() => { if (taps < 5) location.href = "index.html"; taps = 0; }, 600);
   });
+}
+
+
+// ---------- Site-wide effects ----------
+
+function tabTitleTrick() {
+  const real = document.title;
+  let t1, t2;
+  document.addEventListener("visibilitychange", () => {
+    clearTimeout(t1); clearTimeout(t2);
+    if (document.hidden) {
+      document.title = "Person has left the chat";
+      t1 = setTimeout(() => { document.title = "come back"; }, 8000);
+      t2 = setTimeout(() => { document.title = "Person is in your other tab"; }, 25000);
+    } else {
+      document.title = "...Person is back";
+      t1 = setTimeout(() => { document.title = real; }, 1500);
+    }
+  });
+}
+
+// Wrap every "Person" in the article, then make one blink out of existence now and then.
+function vanishingWords() {
+  const main = document.getElementById("main"); if (!main) return;
+  const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) {
+    const n = walker.currentNode;
+    if (/person/i.test(n.nodeValue) && !n.parentNode.closest("a, button, h1, select, .redact, #livemsg, .camlabel")) nodes.push(n);
+  }
+  nodes.forEach(n => {
+    const frag = document.createDocumentFragment();
+    n.nodeValue.split(/(SCP-PERSON|Person)/g).forEach(part => {
+      if (part === "SCP-PERSON" || part === "Person") {
+        const s = document.createElement("span"); s.className = "pw"; s.textContent = part; frag.appendChild(s);
+      } else if (part) frag.appendChild(document.createTextNode(part));
+    });
+    n.parentNode.replaceChild(frag, n);
+  });
+  const words = main.querySelectorAll(".pw");
+  if (!words.length) return;
+  (function loop() {
+    setTimeout(() => {
+      const w = words[Math.floor(Math.random() * words.length)];
+      w.classList.add("gone");
+      setTimeout(() => w.classList.remove("gone"), 700 + Math.random() * 1300);
+      loop();
+    }, 3000 + Math.random() * 9000);
+  })();
+}
+
+function hashNum(s) { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+
+function pageInfo(id) {
+  let mine = 1;
+  try { mine = parseInt(localStorage.getItem("views:" + id) || "0", 10) + 1; localStorage.setItem("views:" + id, mine); } catch (e) {}
+  const base = 2000 + hashNum(id) % 8000;
+  const views = base + mine;
+  const rev = 12 + hashNum(id + "r") % 80;
+  const mins = 1 + Math.floor(Math.random() * 59);
+  return `<div class="pageinfo">
+    page revision: ${rev}, last edited: ${mins} minute${mins === 1 ? "" : "s"} ago by <b>SCP-PERSON</b>
+    <span class="dimtxt">(we did not give SCP-PERSON edit access)</span><br>
+    This page has been viewed ${views.toLocaleString()} times. SCP-PERSON viewed it ${(views - 1).toLocaleString()} of those. You viewed it ${mine}.
+  </div>`;
+}
+
+// ---------- Missing poster ----------
+
+function renderMissing() {
+  document.title = "MISSING - Person Wiki";
+  const photo = POSTER_PHOTO ? `<img src="${esc(POSTER_PHOTO)}" alt="SCP-PERSON">` : `<div class="silhouette">${LOGO}<span>PHOTO DEVELOPED BLANK</span></div>`;
+  shell(`<div class="poster">
+    <div class="ptop">MISSING</div>
+    <div class="psub">HAVE YOU SEEN THIS PERSON?</div>
+    <div class="pphoto">${photo}</div>
+    <table class="pfacts">
+      <tr><td>NAME</td><td>SCP-PERSON ("Person")</td></tr>
+      <tr><td>LAST SEEN</td><td>Containment Cell 12, Site-31. Also the break room. Also here.</td></tr>
+      <tr><td>HEIGHT</td><td>Person-sized</td></tr>
+      <tr><td>DESCRIPTION</td><td>Looks like a normal person. That's how it gets you.</td></tr>
+      <tr><td>MISSING SINCE</td><td>About 4 seconds ago, every time</td></tr>
+    </table>
+    <div class="pwarn">IF FOUND: DO NOT APPROACH. DO NOT BLINK. CALL SITE-31.</div>
+    <div class="preward">REWARD: <span class="redact">one (1) bag of chips</span></div>
+    <div class="tabs">${Array(8).fill('<div>SITE-31<br>ext. 31</div>').join("")}</div>
+  </div>
+  <p style="text-align:center"><button class="sightbtn" style="width:auto;padding:7px 18px" onclick="window.print()">Print Poster</button></p>`);
+}
+
+// ---------- Gift shop ----------
+
+const SHOP = [
+  { name: "\"I Survived a Person Breach\" T-Shirt", price: "$24.99", icon: "👕", desc: "100% cotton. Available in all sizes except the one you need." },
+  { name: "Person-Proof Door Lock*", price: "$89.99", icon: "🔒", desc: "*Not Person-proof. No lock is Person-proof. This is a regular lock." },
+  { name: "Site-31 Guard Eye Drops", price: "$9.99", icon: "💧", desc: "Never blink again. Results not guaranteed. Sneezing not covered." },
+  { name: "SCP-PERSON Plush", price: "$34.99", icon: "🧸", desc: "Soft, huggable, and somewhere else by the time you look back." },
+  { name: "Empty Cell Snow Globe", price: "$19.99", icon: "🔮", desc: "Comes with a tiny Cell 12. The figure inside was there at the factory." },
+  { name: "\"Days Since Last Breach\" Sign", price: "$14.99", icon: "🪧", desc: "Comes preset to 0. Has no other numbers." },
+  { name: "Signed Break Room Microwave", price: "$249.99", icon: "📦", desc: "Signed by SCP-PERSON. Nobody saw SCP-PERSON sign it." },
+  { name: "Mystery Box", price: "$4.99", icon: "🎁", desc: "Box is empty. Box was not empty when we packed it." }
+];
+const SHOP_REPLIES = [
+  "SOLD OUT", "ITEM HAS BREACHED CONTAINMENT", "SCP-PERSON BOUGHT THE LAST ONE",
+  "ADDED TO CART. CART IS MISSING.", "OUT OF STOCK (STOCK IS IN THE BREAK ROOM)", "BACKORDERED UNTIL PERSON IS FOUND"
+];
+
+function renderShop() {
+  document.title = "Gift Shop - Person Wiki";
+  const items = SHOP.map((it, i) => `<div class="item"><div class="icon">${it.icon}</div>
+    <b>${esc(it.name)}</b><div class="price">${it.price}</div><p>${esc(it.desc)}</p>
+    <button class="sightbtn" onclick="buy(this)">Add to Cart</button></div>`).join("");
+  shell(`<h1 id="page-title">Site-31 Gift Shop</h1>
+    <p>Official SCP-PERSON merchandise. All proceeds go toward a new containment cell. Again.</p>
+    <div class="shop">${items}</div>
+    <p class="dimtxt" style="font-size:11px">This is a joke shop. Nothing is for sale. Nothing was ever for sale.</p>`);
+}
+function buy(btn) {
+  btn.textContent = SHOP_REPLIES[Math.floor(Math.random() * SHOP_REPLIES.length)];
+  btn.disabled = true; btn.classList.add("soldout");
+}
+
+// ---------- Clearance badge ----------
+
+const ASSIGN = ["Cell 12 Watch (Blinking Rotation)", "Break Room Surveillance", "Conference Room B", "Vending Machine Detail",
+  "Breach Paperwork", "Camera 00 Monitoring (nothing to see)", "Door Holder", "Microwave Security"];
+const STATUSES = ["Has not seen Person", "Has seen Person (twice, at the same time)", "Is not Person (probably)",
+  "Blinked once. On probation.", "Was in Exploration E-2", "Person knows their name"];
+
+function renderBadge() {
+  document.title = "Get Your Badge - Person Wiki";
+  shell(`<h1 id="page-title">Site-31 Personnel Clearance Badge</h1>
+    <p>All personnel must carry a valid badge. Enter your name to be issued one. Badges are randomly assigned, just like real Foundation jobs.</p>
+    <div class="badgeform"><input id="bname" maxlength="24" placeholder="Your name"><button class="sightbtn" id="bgo">Issue Badge</button></div>
+    <canvas id="badge" width="640" height="400"></canvas>
+    <p id="bdl" style="display:none"><button class="sightbtn" style="width:auto;padding:7px 18px" id="bsave">Download Badge</button></p>`);
+  const go = () => drawBadge(document.getElementById("bname").value.trim() || "Unnamed Personnel");
+  document.getElementById("bgo").onclick = go;
+  document.getElementById("bname").addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  document.getElementById("bsave").onclick = () => {
+    const a = document.createElement("a"); a.download = "site31-badge.png";
+    a.href = document.getElementById("badge").toDataURL("image/png"); a.click();
+  };
+}
+
+function drawBadge(name) {
+  const cv = document.getElementById("badge"), c = cv.getContext("2d");
+  const isPerson = /person/i.test(name);
+  const r = (arr, seed) => arr[(hashNum(name + seed)) % arr.length];
+  const level = isPerson ? "ALL" : String(1 + hashNum(name + "lvl") % 5);
+  const id = isPerson ? "000-000" : String(100 + hashNum(name) % 900) + "-" + String(1000 + hashNum(name + "x") % 9000);
+  cv.style.display = "block"; document.getElementById("bdl").style.display = "block";
+
+  c.fillStyle = "#f2f2f2"; c.fillRect(0, 0, 640, 400);
+  c.fillStyle = isPerson ? "#3b0a57" : "#1c1c1c"; c.fillRect(0, 0, 640, 86);
+  c.fillStyle = "#600"; c.fillRect(0, 86, 640, 6);
+  // logo
+  c.strokeStyle = "#ddd"; c.lineWidth = 4; c.beginPath(); c.arc(50, 43, 30, 0, Math.PI * 2); c.stroke();
+  c.fillStyle = "#ddd"; c.beginPath(); c.arc(50, 36, 8, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.moveTo(36, 62); c.quadraticCurveTo(36, 46, 50, 46); c.quadraticCurveTo(64, 46, 64, 62); c.fill();
+  c.fillStyle = "#eee"; c.font = "bold 28px Arial"; c.fillText("SITE-31", 96, 42);
+  c.font = "13px Arial"; c.fillStyle = "#bbb"; c.fillText("SECURE. CONTAIN. LOSE TRACK OF.", 96, 66);
+  // photo box
+  c.fillStyle = "#222"; c.fillRect(28, 116, 150, 190);
+  c.fillStyle = "#555"; c.beginPath(); c.arc(103, 180, 32, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.moveTo(53, 290); c.quadraticCurveTo(53, 220, 103, 220); c.quadraticCurveTo(153, 220, 153, 290); c.fill();
+  c.fillStyle = "#999"; c.font = "bold 11px Courier New"; c.fillText(isPerson ? "PHOTO MISSING" : "PHOTO ON FILE", 53, 300);
+  // text
+  c.fillStyle = "#111"; c.font = "bold 26px Arial";
+  let nm = name.toUpperCase(); while (c.measureText(nm).width > 420) nm = nm.slice(0, -1);
+  c.fillText(nm, 200, 140);
+  const rows = isPerson
+    ? [["ID", id], ["ASSIGNMENT", "Wherever it wants"], ["STATUS", "This badge was not issued. It was taken."]]
+    : [["ID", id], ["ASSIGNMENT", r(ASSIGN, "a")], ["STATUS", r(STATUSES, "s")]];
+  rows.forEach(([k, v], i) => {
+    c.fillStyle = "#777"; c.font = "bold 11px Arial"; c.fillText(k, 200, 175 + i * 46);
+    c.fillStyle = "#222"; c.font = "16px Arial"; c.fillText(v, 200, 195 + i * 46);
+  });
+  // clearance block
+  c.fillStyle = isPerson ? "#7a2fb0" : ["#2a7d2a", "#2a7d2a", "#c78c00", "#c78c00", "#b00"][parseInt(level, 10) - 1] || "#b00";
+  c.fillRect(470, 230, 140, 76);
+  c.fillStyle = "#fff"; c.font = "bold 12px Arial"; c.fillText("CLEARANCE", 504, 252);
+  c.font = "bold 34px Arial"; const lw = c.measureText("LVL " + level).width; c.fillText("LVL " + level, 540 - lw / 2, 292);
+  // barcode
+  c.fillStyle = "#111";
+  for (let x = 28, i = 0; x < 610; i++) { const w = 1 + hashNum(name + i) % 4; if (i % 2 === 0) c.fillRect(x, 330, w, 40); x += w + 1; }
+  c.fillStyle = "#666"; c.font = "10px Courier New";
+  c.fillText("IF FOUND, RETURN TO SITE-31. IF SCP-PERSON FOUND, ALSO RETURN TO SITE-31.", 28, 388);
 }

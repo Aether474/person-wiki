@@ -1,6 +1,6 @@
 // SITE-31 GUARD TERMINAL — secret page. Reached by tapping the logo 5 times.
 const out = document.getElementById("out"), inp = document.getElementById("in");
-let busy = false, history = [], hi = 0, blinks = 0, locked = false;
+let busy = false, history = [], hi = 0, blinks = 0, locked = false, awaitingPw = false, pwTries = 0;
 
 function print(text, cls) {
   const d = document.createElement("div");
@@ -125,9 +125,39 @@ const COMMANDS = {
   hi: () => slow([["hi", "warn"]]),
   person: () => slow([["yes?", "warn"]]),
 
+  override: () => slow([
+    ["MANUAL OVERRIDE REQUESTED", "warn"],
+    "this command is restricted to Site-31 command staff.",
+    "enter override password:"
+  ], () => { awaitingPw = true; inp.type = "password"; }),
+
   clear: () => { out.innerHTML = ""; },
   exit: () => slow(["LOGGING OUT...", ["SCP-PERSON has also logged out.", "dim"]], () => { location.href = "index.html"; })
 };
+
+function checkPassword(pw) {
+  if (pw === "blinkless") {
+    return slow([
+      ["PASSWORD ACCEPTED", ""],
+      "OVERRIDE ACCESS GRANTED. WELCOME, COMMAND.",
+      "",
+      "unlocking full containment controls...",
+      "unlocking...",
+      "unlocking...",
+      ["ALL DOORS ON SITE-31 ARE NOW UNLOCKED", "err"],
+      ["wait", "warn"],
+      ["wait no", "warn"],
+      "",
+      ["SCP-PERSON: BREACHED", "err"],
+      ["SCP-PERSON has sent you a message: \"thanks :)\"", "warn"],
+      "",
+      ["(how did you get the password? guard #1106 has been fired again.)", "dim"]
+    ]);
+  }
+  pwTries++;
+  if (pwTries >= 3) return slow([["ACCESS DENIED", "err"], ["3 failed attempts. SCP-PERSON has been notified.", "warn"], ["SCP-PERSON says: \"it's on the guard roster btw\"", "dim"]]);
+  slow([["ACCESS DENIED", "err"], [pick(["incorrect.", "nope.", "that's not it.", "SCP-PERSON knows the password. ask SCP-PERSON."]), "dim"]]);
+}
 
 function runExe() {
   slow([
@@ -146,6 +176,12 @@ function runExe() {
 
 function run(raw) {
   const cmd = raw.trim().toLowerCase().replace(/\s+/g, " ");
+  if (awaitingPw) {
+    awaitingPw = false;
+    inp.type = "text";
+    print("password: " + "*".repeat(raw.length), "dim");
+    return checkPassword(cmd);
+  }
   print("guard@site31:~$ " + raw, "dim");
   if (!cmd) return;
   if (COMMANDS[cmd]) return COMMANDS[cmd]();
